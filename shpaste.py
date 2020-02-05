@@ -30,8 +30,8 @@ def index():
 @app.route('/create')
 def create():
     while True:
-        public = getrandbits(32)
-        private = getrandbits(32)
+        public = getrandbits(31)
+        private = getrandbits(31)
         public_check = Entity.query.filter_by(public=public).first()
         private_check = Entity.query.filter_by(public=public).first()
         if public_check or private_check:
