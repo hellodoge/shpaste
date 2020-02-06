@@ -24,7 +24,8 @@ def make_shell_context():
 
 @app.route('/')
 def index():
-    return render_template('index.html', url=Configuration.SITE_URL)
+    return render_template('index.html', url=Configuration.SITE_URL,
+                           repo=Configuration.REPO_URL)
 
 
 @app.route('/create')
