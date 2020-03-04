@@ -17,11 +17,6 @@ class Entity(db.Model):
     text = db.Column(db.Text)
 
 
-@app.shell_context_processor
-def make_shell_context():
-    return {'db': db, 'Entity': Entity}
-
-
 def wrap(entity_id, link):
     link = hex(link)[2:]
     return hex(entity_id)[2:] + '0'*(8-len(link)) + link
