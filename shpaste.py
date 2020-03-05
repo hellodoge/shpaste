@@ -61,13 +61,13 @@ def create():
 
 
 @app.route('/<entity_public>')
-def view(entity_public):
+def fetch(entity_public):
     entity = get_entity(entity_public, Entity.get_public)
     return str(entity.text)
 
 
 @app.route('/<entity_private>/<text>')
-def change(entity_private, text):
+def update(entity_private, text):
     entity = get_entity(entity_private, Entity.get_private)
     entity.text = text
     db.session.commit()
