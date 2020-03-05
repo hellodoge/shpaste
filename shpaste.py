@@ -1,3 +1,6 @@
+# Copyright 2020 hellodoge
+# Licensed under the Apache License, Version 2.0
+
 from flask import Flask
 from flask import render_template, abort
 from flask_sqlalchemy import SQLAlchemy
