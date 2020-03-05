@@ -16,6 +16,25 @@ class Entity(db.Model):
     private = db.Column(db.Integer, nullable=False)
     text = db.Column(db.Text)
 
+    def get_public(self):
+        return self.public
+
+    def get_private(self):
+        return self.private
+
+
+# noinspection PyUnboundLocalVariable
+def get_entity(link, func):
+    try:
+        entity_id = int(link[:-8], 16)
+        sign = int(link[-8:], 16)
+    except ValueError:
+        abort(404)
+    entity = Entity.query.get_or_404(entity_id)
+    if sign != func(entity):
+        abort(404)
+    return entity
+
 
 def wrap(entity_id, link):
     link = hex(link)[2:]
@@ -41,27 +60,13 @@ def create():
 
 @app.route('/<entity_public>')
 def view(entity_public):
-    try:
-        entity_id = int(entity_public[:-8], 16)
-        public = int(entity_public[-8:], 16)
-    except ValueError:
-        abort(404)
-    entity = Entity.query.get_or_404(entity_id)
-    if public != entity.public:
-        abort(404)
+    entity = get_entity(entity_public, Entity.get_public)
     return str(entity.text)
 
 
 @app.route('/<entity_private>/<text>')
 def change(entity_private, text):
-    try:
-        entity_id = int(entity_private[:-8], 16)
-        private = int(entity_private[-8:], 16)
-    except ValueError:
-        abort(404)
-    entity = Entity.query.get_or_404(entity_id)
-    if private != entity.private:
-        abort(404)
+    entity = get_entity(entity_private, Entity.get_private)
     entity.text = text
     db.session.commit()
     return f'Public link {Configuration.SITE_URL}/{wrap(entity.id, entity.public)}\n'
