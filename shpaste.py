@@ -43,8 +43,7 @@ def wrap(entity_id, link):
 
 @app.route('/')
 def index():
-    return render_template('index.html', url=Configuration.SITE_URL,
-                           repo=Configuration.REPO_URL)
+    return render_template('index.html', url=Configuration.SITE_URL)
 
 
 @app.route('/create')
