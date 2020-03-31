@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 
 from flask import Flask
-from flask import render_template, abort
+from flask import render_template, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config import Configuration
 from random import getrandbits
@@ -56,8 +56,10 @@ def create():
     entity = Entity(public=public, private=private)
     db.session.add(entity)
     db.session.commit()
-    return f'Public link {Configuration.SITE_URL}/{wrap(entity.id, public)}\n' + \
-           f'Private link {Configuration.SITE_URL}/{wrap(entity.id, private)}\n'
+    return jsonify(
+        {'Public link': f'{Configuration.SITE_URL}/{wrap(entity.id, public)}',
+         'Private link': f'{Configuration.SITE_URL}/{wrap(entity.id, private)}'}
+    )
 
 
 @app.route('/<entity_public>')
@@ -71,7 +73,9 @@ def update(entity_private, text):
     entity = get_entity(entity_private, Entity.get_private)
     entity.text = text
     db.session.commit()
-    return f'Public link {Configuration.SITE_URL}/{wrap(entity.id, entity.public)}\n'
+    return jsonify(
+        {'Public link': f'{Configuration.SITE_URL}/{wrap(entity.id, entity.public)}'}
+    )
 
 
 if __name__ == '__main__':
